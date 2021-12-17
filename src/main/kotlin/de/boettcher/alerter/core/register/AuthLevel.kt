@@ -4,6 +4,6 @@ import javax.persistence.Entity
 
 @Entity
 sealed class AuthLevel{
-    object SenderAndReceiver: AuthLevel()
-    object Receiver: AuthLevel()
+    object SendEncryptedMessages: AuthLevel()
+    object SendPlainTextMessages: AuthLevel()
 }
