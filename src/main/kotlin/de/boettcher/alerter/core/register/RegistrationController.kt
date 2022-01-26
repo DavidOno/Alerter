@@ -1,21 +1,34 @@
 package de.boettcher.alerter.core.register
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-class RegistrationController
-@Autowired constructor(val registrationService: RegistrationService){
+@RequestMapping("/")
+class RegistrationController{
+
+    @Autowired
+    lateinit var participantRepository: ParticipantRepository
 
     @GetMapping("api/v1/availability")
     fun testAvailability(): String {
         return "Server is available"
     }
 
-    @GetMapping("api/v1/test")
-    fun test(): List<Participant>{
-        return registrationService.getUsers()
+    @PostMapping("addParticipant")
+    fun saveParticipant(@RequestBody participant: Participant): String{
+        participantRepository.save(participant)
+        return "Added participant with id: ${participant.id}"
+    }
+
+    @GetMapping("findAllParticipants")
+    fun getParticipants(): List<Participant>{
+        return participantRepository.findAll()
+    }
+
+    @GetMapping("findAllParticipants/{id}")
+    fun getParticipant(@RequestParam id: Integer): Participant{
+        return participantRepository.findById(id).get()
     }
 
 

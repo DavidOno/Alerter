@@ -1,25 +1,21 @@
 package de.boettcher.alerter.core.register
 
-import javax.persistence.*
+import lombok.ToString
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Entity
-@Table
+import javax.validation.constraints.Email
+
+@ToString
+@Document(collection = "Participant")
 data class Participant(
     @Id
-    @SequenceGenerator(
-        name = "participant_sequence",
-        sequenceName = "participant_sequence",
-        allocationSize = 1
-    )
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "participant_sequence"
-    )
-    private val userId: Long,
-    private val firstName: String,
-    private val lastName: String,
-    private val email: Email,
-    private val authLevel: AuthLevel
+    val id: Integer,
+    val firstName: String,
+    val lastName: String,
+    @Email
+    val email: String,
+//    val privileges: List<Privileges>
 ) {
 
 }
