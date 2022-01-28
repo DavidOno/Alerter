@@ -1,8 +1,11 @@
 package de.boettcher.alerter.core.alert.crud
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 
 @RestController
@@ -13,7 +16,10 @@ class PreparedAlertController {
     private lateinit var preparedAlertRepository: PreparedAlertRepository
 
     @PostMapping("/api/v1/new_alert")
-    fun createNewAlert(@RequestBody preparedAlert: PreparedAlert): ResponseEntity<String>{
+    fun createNewAlert(@Valid @RequestBody preparedAlert: PreparedAlert, bindingResult: BindingResult): ResponseEntity<String>{
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity("JSON values do not satisfy constraints.\n$bindingResult", HttpStatus.BAD_REQUEST)
+        }
         preparedAlertRepository.save(preparedAlert)
         return ResponseEntity.ok("Created new Alert: ${preparedAlert.alertId}")
     }
