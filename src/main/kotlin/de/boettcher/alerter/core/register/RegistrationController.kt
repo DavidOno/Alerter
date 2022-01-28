@@ -1,6 +1,7 @@
 package de.boettcher.alerter.core.register
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -11,19 +12,19 @@ class RegistrationController{
     lateinit var participantRepository: ParticipantRepository
 
     @PostMapping("api/v1/addParticipant")
-    fun saveParticipant(@RequestBody participant: Participant): String{
+    fun saveParticipant(@RequestBody participant: Participant): ResponseEntity<String>{
         participantRepository.save(participant)
-        return "Added participant with id: ${participant.userId}"
+        return ResponseEntity.ok("Added participant with id: ${participant.userId}")
     }
 
     @GetMapping("api/v1/findAllParticipants")
-    fun getParticipants(): List<Participant>{
-        return participantRepository.findAll()
+    fun getParticipants(): ResponseEntity<List<Participant>>{
+        return ResponseEntity.ok(participantRepository.findAll())
     }
 
     @GetMapping("api/v1/findAllParticipants/{id}")
-    fun getParticipant(@RequestParam id: Integer): Participant{
-        return participantRepository.findById(id).get()
+    fun getParticipant(@RequestParam id: Integer): ResponseEntity<Participant>{
+        return ResponseEntity.ok(participantRepository.findById(id).get())
     }
 
 
