@@ -1,4 +1,4 @@
-package de.boettcher.alerter.core.alert.creation
+package de.boettcher.alerter.core.alert.crud
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty

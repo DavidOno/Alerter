@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/participant/")
-class RegistrationController{
+class ParticipantController{
 
     @Autowired
     lateinit var participantRepository: ParticipantRepository

@@ -1,4 +1,4 @@
-package de.boettcher.alerter.core.alert.creation
+package de.boettcher.alerter.core.alert.crud
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/alert/creation/")
-class AlertCreationController {
+@RequestMapping("/alert/crud/")
+class PreparedAlertController {
 
     @Autowired
-    private lateinit var alertCreationRepository: AlertCreationRepository
+    private lateinit var preparedAlertRepository: PreparedAlertRepository
 
     @PostMapping("new_alert")
     fun createNewAlert(@RequestBody preparedAlert: PreparedAlert): ResponseEntity<String>{
-        alertCreationRepository.save(preparedAlert)
+        preparedAlertRepository.save(preparedAlert)
         return ResponseEntity.ok("Created new Alert: ${preparedAlert.alertId}")
     }
 }
