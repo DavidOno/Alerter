@@ -22,10 +22,8 @@ class ParticipantController{
         return ResponseEntity.ok(participantRepository.findAll())
     }
 
-    @GetMapping("api/v1/findAllParticipants/{id}")
+    @GetMapping("api/v1/findAllParticipants/")
     fun getParticipant(@RequestParam id: Integer): ResponseEntity<Participant>{
         return ResponseEntity.ok(participantRepository.findById(id).get())
     }
-
-
 }
