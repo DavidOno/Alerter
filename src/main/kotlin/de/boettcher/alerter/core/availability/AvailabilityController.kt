@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/general/")
+@RequestMapping("/general")
 class AvailabilityController{
 
-    @GetMapping("api/v1/availability")
+    @GetMapping("/api/v1/availability")
     fun testAvailability(): ResponseEntity<String> {
         return ResponseEntity.ok("Server is available")
     }

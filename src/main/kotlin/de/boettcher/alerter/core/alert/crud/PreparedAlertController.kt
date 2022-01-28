@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/alert/crud/")
+@RequestMapping("/alert/crud")
 class PreparedAlertController {
 
     @Autowired
     private lateinit var preparedAlertRepository: PreparedAlertRepository
 
-    @PostMapping("api/v1/new_alert")
+    @PostMapping("/api/v1/new_alert")
     fun createNewAlert(@RequestBody preparedAlert: PreparedAlert): ResponseEntity<String>{
         preparedAlertRepository.save(preparedAlert)
         return ResponseEntity.ok("Created new Alert: ${preparedAlert.alertId}")
     }
 
-    @DeleteMapping("api/v1/delete_alert/")
+    @DeleteMapping("/api/v1/delete_alert/")
     fun deleteAlert(@RequestParam id: Integer): ResponseEntity<String>{
        return if(alertIdExists(id)) {
             preparedAlertRepository.deleteById(id)
