@@ -18,7 +18,7 @@ class RegistrationController{
     @PostMapping("addParticipant")
     fun saveParticipant(@RequestBody participant: Participant): String{
         participantRepository.save(participant)
-        return "Added participant with id: ${participant.id}"
+        return "Added participant with id: ${participant.userId}"
     }
 
     @GetMapping("findAllParticipants")

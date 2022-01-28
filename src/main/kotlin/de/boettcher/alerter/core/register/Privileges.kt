@@ -1,10 +1,10 @@
 package de.boettcher.alerter.core.register
 
-import javax.persistence.Entity
+import lombok.NoArgsConstructor
 
-
-sealed class Privileges{
-    object SendEncryptedMessages: Privileges()
-    object SendPlainTextMessages: Privileges()
-    object CalculateBigFactorial: Privileges()
+@NoArgsConstructor
+enum class Privileges(){
+    SEND_ENCYPTED_MESSAGES(),
+    SEND_PLAIN_MESSAGES(),
+    CALCULATE_FACTORIAL(),
 }
