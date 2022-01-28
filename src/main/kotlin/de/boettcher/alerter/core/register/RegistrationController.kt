@@ -4,29 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/participant/")
 class RegistrationController{
 
     @Autowired
     lateinit var participantRepository: ParticipantRepository
 
-    @GetMapping("api/v1/availability")
-    fun testAvailability(): String {
-        return "Server is available"
-    }
-
-    @PostMapping("addParticipant")
+    @PostMapping("api/v1/addParticipant")
     fun saveParticipant(@RequestBody participant: Participant): String{
         participantRepository.save(participant)
         return "Added participant with id: ${participant.userId}"
     }
 
-    @GetMapping("findAllParticipants")
+    @GetMapping("api/v1/findAllParticipants")
     fun getParticipants(): List<Participant>{
         return participantRepository.findAll()
     }
 
-    @GetMapping("findAllParticipants/{id}")
+    @GetMapping("api/v1/findAllParticipants/{id}")
     fun getParticipant(@RequestParam id: Integer): Participant{
         return participantRepository.findById(id).get()
     }
