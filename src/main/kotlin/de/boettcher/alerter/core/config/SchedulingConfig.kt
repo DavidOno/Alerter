@@ -1,26 +1,22 @@
 package de.boettcher.alerter.core.config
 
-import de.boettcher.alerter.core.alert.crud.PreparedAlert
 import de.boettcher.alerter.core.alert.crud.PreparedAlertRepository
+import de.boettcher.alerter.core.alerting.EmailSender
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.scheduling.annotation.SchedulingConfigurer
 import org.springframework.scheduling.config.ScheduledTaskRegistrar
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
-import java.time.ZoneOffset
-
-import java.time.Instant
 
 import java.time.LocalTime
 
 import java.time.LocalDateTime
 
 import java.time.LocalDate
-import java.util.*
 
 
 @Configuration
@@ -28,16 +24,27 @@ import java.util.*
 class SchedulingConfig: SchedulingConfigurer{
     private val POOL_SIZE: Int = 4
 
+    var logger: Logger = LoggerFactory.getLogger(SchedulingConfig::class.java)
     @Autowired
     private lateinit var preparedAlertRepository: PreparedAlertRepository
+    @Autowired
+    private lateinit var emailSender: EmailSender
 
-    @Scheduled(fixedRateString = "PT10S")
+    @Scheduled(fixedRateString = "PT60S")
     fun sendAlerts(){
-        //Search through MongoDB
-        val localDate = LocalDate.now()
-        val localDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
-        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsForTheNextMinute(localDateTime)
-        System.out.println(allAlertsForTheNextMinute)
+        val now = LocalDateTime.now()
+        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsForTheNextMinute(now)
+        logger.info("For following time stamp: $now ${allAlertsForTheNextMinute.size} alerts were found:")
+        allAlertsForTheNextMinute.forEach{ optional -> logger.info(optional.toString()) }
+        allAlertsForTheNextMinute.stream()
+                                .filter { optional -> optional.isPresent }
+                                .map { optional -> optional.get() }
+                                .forEach { preparedAlert ->
+                                            run {
+                                                emailSender.triggerAlert(preparedAlert)
+                                                preparedAlertRepository.deleteById(preparedAlert.alertId)
+                                            }
+                                }
     }
 
 
