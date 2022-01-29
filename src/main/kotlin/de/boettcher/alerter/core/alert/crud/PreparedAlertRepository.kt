@@ -9,4 +9,3 @@ interface PreparedAlertRepository: MongoRepository<PreparedAlert, Integer>{
     @Query("{'dateTimeForAlert': { '\$lte' : ?0 }}")
     fun getAllAlertsForTheNextMinute(localDateTime: Date): List<Optional<PreparedAlert>>
 }
-//Example MongoDb-Query: {dateTimeForAlert: {$lte: ISODate("2022-01-29T19:40:00.285+00:00")}}
