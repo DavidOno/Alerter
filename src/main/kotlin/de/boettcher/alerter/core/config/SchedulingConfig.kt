@@ -9,14 +9,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.scheduling.annotation.SchedulingConfigurer
-import org.springframework.scheduling.config.ScheduledTaskRegistrar
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
-
-import java.time.LocalTime
-
-import java.time.LocalDateTime
-
-import java.time.LocalDate
+import org.springframework.scheduling.config.ScheduledTaskRegistrar
+import java.time.Instant
+import java.util.*
 
 
 @Configuration
@@ -32,9 +28,9 @@ class SchedulingConfig: SchedulingConfigurer{
 
     @Scheduled(fixedRateString = "PT60S")
     fun sendAlerts(){
-        val now = LocalDateTime.now()
+        val now = Date.from(Instant.now())
         val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsForTheNextMinute(now)
-        logger.info("For following time stamp: $now ${allAlertsForTheNextMinute.size} alerts were found:")
+        logger.info("${allAlertsForTheNextMinute.size} alerts were found for following timestamp: $now")
         allAlertsForTheNextMinute.forEach{ optional -> logger.info(optional.toString()) }
         allAlertsForTheNextMinute.stream()
                                 .filter { optional -> optional.isPresent }
