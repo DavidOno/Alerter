@@ -38,11 +38,3 @@ class PreparedAlertController {
         return preparedAlertRepository.findById(id).isPresent
     }
 }
-
-//Example for calling .../new_alert
-//{
-//    "alertId": 11,
-//    "message": "This is an alert",
-//    "destinations": ["d.o@96gmail.com"],
-//    "condition": "2022-01-30T22:00:00.285+0000"
-//}
