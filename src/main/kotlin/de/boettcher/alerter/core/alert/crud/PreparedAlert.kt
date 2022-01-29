@@ -2,6 +2,7 @@ package de.boettcher.alerter.core.alert.crud
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
+import de.boettcher.alerter.core.custom.annotation.Emails
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
@@ -19,7 +20,7 @@ data class PreparedAlert(
         @JsonProperty("message")
         val message: String,
 
-//        @field:Email not supported for Collections
+        @field:Emails
         @field:NotEmpty(message = "There must be at least one destination (=email)")
         @JsonProperty("destinations")
         val destinations: List<String>,
