@@ -4,8 +4,8 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import java.util.*
 
-interface PreparedAlertRepository: MongoRepository<PreparedAlert, Integer>{
+interface PreparedAlertRepository: MongoRepository<PreparedAlert, Integer>, PreparedAlertRepositoryCustom{
 
     @Query("{'dateTimeForAlert': { '\$lte' : ?0 }}")
-    fun getAllAlertsForTheNextMinute(localDateTime: Date): List<Optional<PreparedAlert>>
+    fun getAllAlertsLesserOrEqualTo(localDateTime: Date): List<Optional<PreparedAlert>>
 }

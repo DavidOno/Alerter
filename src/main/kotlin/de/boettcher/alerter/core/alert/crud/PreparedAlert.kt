@@ -26,9 +26,7 @@ data class PreparedAlert(
 
         @JsonProperty("condition")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
-        private val dateTimeForAlert: LocalDateTime
+        val dateTimeForAlert: LocalDateTime
 ){
-        fun isConditionMet(): Boolean {
-                return LocalDateTime.now().isAfter(dateTimeForAlert)
-        }
+
 }

@@ -18,7 +18,7 @@ import java.util.*
 @Configuration
 @EnableScheduling
 class SchedulingConfig: SchedulingConfigurer{
-    private val POOL_SIZE: Int = 4
+    private val POOL_SIZE: Int = 1
 
     var logger: Logger = LoggerFactory.getLogger(SchedulingConfig::class.java)
     @Autowired
@@ -29,7 +29,7 @@ class SchedulingConfig: SchedulingConfigurer{
     @Scheduled(fixedRateString = "PT60S")
     fun sendAlerts(){
         val now = Date.from(Instant.now())
-        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsForTheNextMinute(now)
+        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsLesserOrEqualTo(now)
         logger.info("${allAlertsForTheNextMinute.size} alerts were found for following timestamp: $now")
         allAlertsForTheNextMinute.forEach{ optional -> logger.info(optional.toString()) }
         allAlertsForTheNextMinute.stream()
@@ -51,12 +51,12 @@ class SchedulingConfig: SchedulingConfigurer{
 
 //    @Scheduled(fixedRateString = "PT1M") //Every 4 Hours
 //    fun checkForAlertsForNext5Hours(){
-//        //Search through Redis Cache2
+//        //Search through Redis Cache2 OR simple evict the cache
 //    }
 //
 //    @Scheduled(fixedRateString = "PT1M") //Every 24 Hours
 //    fun checkForAlertsForNext25Hours(){
-//        //Search through MongoDB
+//        //Search through MongoDB OR simple evict the cache
 //    }
 
 
