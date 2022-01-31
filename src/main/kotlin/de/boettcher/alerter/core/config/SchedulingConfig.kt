@@ -29,12 +29,10 @@ class SchedulingConfig: SchedulingConfigurer{
     @Scheduled(fixedRateString = "PT60S")
     fun sendAlerts(){
         val now = Date.from(Instant.now())
-        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsLesserOrEqualTo(now)
+        val allAlertsForTheNextMinute = preparedAlertRepository.getAllAlertsForNextMinute()
         logger.info("${allAlertsForTheNextMinute.size} alerts were found for following timestamp: $now")
         allAlertsForTheNextMinute.forEach{ optional -> logger.info(optional.toString()) }
         allAlertsForTheNextMinute.stream()
-                                .filter { optional -> optional.isPresent }
-                                .map { optional -> optional.get() }
                                 .forEach { preparedAlert ->
                                             run {
                                                 emailSender.triggerAlert(preparedAlert)

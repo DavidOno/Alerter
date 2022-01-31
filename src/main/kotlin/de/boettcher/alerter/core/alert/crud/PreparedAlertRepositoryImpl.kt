@@ -4,9 +4,11 @@ import de.boettcher.alerter.core.common.CacheByList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -15,8 +17,10 @@ import java.util.*
 class PreparedAlertRepositoryImpl: PreparedAlertRepositoryCustom {
 
     @Autowired
+    @Qualifier("cacheValidityFor1Day")
     private lateinit var cache24Hour: CacheByList<PreparedAlert>
     @Autowired
+    @Qualifier("cacheValidityFor4Hours")
     private lateinit var cache4Hour: CacheByList<PreparedAlert>
     @Autowired
     @Lazy
