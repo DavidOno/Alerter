@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 @Component
 class PreparedAlertRepositoryImpl: PreparedAlertRepositoryCustom {
@@ -26,32 +24,28 @@ class PreparedAlertRepositoryImpl: PreparedAlertRepositoryCustom {
     @Lazy
     private lateinit var preparedAlertRepository: PreparedAlertRepository
     var logger: Logger = LoggerFactory.getLogger(PreparedAlertRepositoryImpl::class.java)
-    private val TIME_BUFFER = 1L
 
     override fun getAllAlertsForNextMinute(): List<PreparedAlert>{
-        val nowIn1Minute = Instant.now().plus(1, ChronoUnit.MINUTES)
-        logger.info("Now in 1 Minute: $nowIn1Minute")
+        val nowIn1Minute = Instant.now().atZone(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.MINUTES)
         val allAlertsForNext4Hours = cache4Hour.getFromCacheOrElse { getAllAlertsForNext4Hours() }
-        val alertsForNextMinute = allAlertsForNext4Hours.filter { alert -> nowIn1Minute.isAfter(alert.dateTimeForAlert.toInstant(ZoneOffset.UTC)) }
-        logger.info("Alerts for next day: $alertsForNextMinute")
+        val alertsForNextMinute = allAlertsForNext4Hours.filter { alert -> nowIn1Minute.isAfter(alert.dateTimeForAlert.atZone(ZoneId.systemDefault()).toInstant()) }
+        logger.info("Alerts for next minute($nowIn1Minute): $alertsForNextMinute")
         return alertsForNextMinute
     }
 
     override fun getAllAlertsForNext4Hours(): List<PreparedAlert>{
-        val nowIn4Hours = Instant.now().plus(4 + TIME_BUFFER, ChronoUnit.HOURS)
-        logger.info("Now in 4 hours: $nowIn4Hours")
+        val nowIn4Hours = Instant.now().atZone(ZoneId.systemDefault()).toInstant().plus(4, ChronoUnit.HOURS)
         val allAlertsForNextDay = cache24Hour.getFromCacheOrElse { getAllAlertsForNextDay() }
-        val allAlertsForNext4Hours = allAlertsForNextDay.filter { alert -> nowIn4Hours.isAfter(alert.dateTimeForAlert.toInstant(ZoneOffset.UTC)) }
-        logger.info("Alerts for next 4 hours: $allAlertsForNext4Hours")
+        val allAlertsForNext4Hours = allAlertsForNextDay.filter { alert -> nowIn4Hours.isAfter(alert.dateTimeForAlert.atZone(ZoneId.systemDefault()).toInstant()) }
+        logger.info("Alerts for next 4 hours($nowIn4Hours): $allAlertsForNext4Hours")
         return allAlertsForNext4Hours
     }
 
     override fun getAllAlertsForNextDay(): List<PreparedAlert>{
-        val tomorrow = Date.from(Instant.now().plus(1, ChronoUnit.DAYS))
-        logger.info("Tomorrow: $tomorrow")
+        val tomorrow = Instant.now().atZone(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS)
         val allAlertsForNextDay = preparedAlertRepository.getAllAlertsLesserOrEqualTo(tomorrow).map { it.get() }
         cache24Hour.replaceData(allAlertsForNextDay)
-        logger.info("Alerts for next day: $allAlertsForNextDay")
+        logger.info("Alerts for next day($tomorrow): $allAlertsForNextDay")
         return allAlertsForNextDay
     }
 }
