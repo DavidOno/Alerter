@@ -1,5 +1,6 @@
 package de.boettcher.alerter.core.common
 
+import de.boettcher.alerter.core.alert.crud.Identifiable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Scope
@@ -9,7 +10,7 @@ import java.time.ZoneId
 
 @Component
 @Scope("prototype")
-class CacheByList<T>(val lifeTimeForCacheValidity: CacheLifeTime) {
+class CacheByList<T : Identifiable>(val lifeTimeForCacheValidity: CacheLifeTime) {
     private var cachedData = listOf<T>()
     private var timeStampTillCacheIsValid: Instant = Instant.now().atZone(ZoneId.systemDefault()).toInstant()
     private var noAlertsFoundForPeriod: Boolean = false
@@ -17,25 +18,29 @@ class CacheByList<T>(val lifeTimeForCacheValidity: CacheLifeTime) {
     private var logger: Logger = LoggerFactory.getLogger(CacheByList::class.java)
 
 
-    fun getFromCacheOrElse(fromDatabase: () -> List<T>): List<T>{
+    fun getFromCacheOrElse(fromNextLevel: () -> List<T>): List<T>{
         logger.info("Cache active with $lifeTimeForCacheValidity and cache is valid: ${isCacheValid()}")
         return if(isCacheValid()){
             cachedData
         }else{
-            return getFromDatabase(fromDatabase)
+            return get(fromNextLevel)
         }
-    }
-
-    private fun getFromDatabase(fromDatabase: () -> List<T>): List<T> {
-        val alerts = fromDatabase()
-        cachedData = alerts
-        timeStampTillCacheIsValid = Instant.now().atZone(ZoneId.systemDefault()).toInstant().plus(lifeTimeForCacheValidity.timeAmount, lifeTimeForCacheValidity.timeUnit)
-        noAlertsFoundForPeriod = alerts.isEmpty()
-        return alerts
     }
 
     fun replaceData(newData: List<T>){
         cachedData = newData
+    }
+
+    fun deleteFromCache(id: Integer){
+        cachedData = cachedData.filter { elem -> elem.getUniqueIdentifier() != id }
+    }
+
+    private fun get(fromNextLevel: () -> List<T>): List<T> {
+        val alerts = fromNextLevel()
+        cachedData = alerts
+        timeStampTillCacheIsValid = Instant.now().atZone(ZoneId.systemDefault()).toInstant().plus(lifeTimeForCacheValidity.timeAmount, lifeTimeForCacheValidity.timeUnit)
+        noAlertsFoundForPeriod = alerts.isEmpty()
+        return alerts
     }
 
     private fun isCacheValid(): Boolean {

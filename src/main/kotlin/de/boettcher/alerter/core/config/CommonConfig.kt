@@ -2,6 +2,7 @@ package de.boettcher.alerter.core.config
 
 import de.boettcher.alerter.core.alert.crud.PreparedAlert
 import de.boettcher.alerter.core.common.CacheByList
+import de.boettcher.alerter.core.common.CacheHierarchy
 import de.boettcher.alerter.core.common.CacheLifeTime
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,4 +15,7 @@ class CommonConfig {
 
     @Bean
     fun cacheValidityFor1Day() = CacheByList<PreparedAlert>(CacheLifeTime(1, ChronoUnit.DAYS))
+
+    @Bean
+    fun cacheHierarchy() = CacheHierarchy(listOf(cacheValidityFor4Hours(), cacheValidityFor1Day()))
 }

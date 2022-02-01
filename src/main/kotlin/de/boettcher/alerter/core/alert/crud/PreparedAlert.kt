@@ -27,6 +27,13 @@ data class PreparedAlert(
         @JsonProperty("condition")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
         val dateTimeForAlert: LocalDateTime
-){
+): Identifiable{
+        override fun getUniqueIdentifier(): Integer {
+                return alertId
+        }
 
+}
+
+interface Identifiable {
+        fun getUniqueIdentifier(): Integer
 }

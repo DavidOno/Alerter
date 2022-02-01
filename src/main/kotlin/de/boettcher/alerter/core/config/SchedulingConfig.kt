@@ -36,7 +36,7 @@ class SchedulingConfig: SchedulingConfigurer{
                                 .forEach { preparedAlert ->
                                             run {
                                                 emailSender.triggerAlert(preparedAlert)
-                                                preparedAlertRepository.deleteById(preparedAlert.alertId)
+                                                preparedAlertRepository.deleteAlertById(preparedAlert.alertId)
                                             }
                                 }
     }
