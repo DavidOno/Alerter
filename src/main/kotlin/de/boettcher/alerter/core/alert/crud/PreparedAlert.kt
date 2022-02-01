@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import de.boettcher.alerter.core.custom.annotation.Emails
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
@@ -27,13 +29,16 @@ data class PreparedAlert(
         @JsonProperty("condition")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
         val dateTimeForAlert: LocalDateTime
-): Identifiable{
+): Cacheable{
         override fun getUniqueIdentifier(): Integer {
                 return alertId
         }
 
+        override fun getTimeStampForAlert(): Instant = dateTimeForAlert.atZone(ZoneId.systemDefault()).toInstant()
+
 }
 
-interface Identifiable {
+interface Cacheable {
         fun getUniqueIdentifier(): Integer
+        fun getTimeStampForAlert(): Instant
 }

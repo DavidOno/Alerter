@@ -8,4 +8,5 @@ interface PreparedAlertRepositoryCustom {
     fun getAllAlertsForNext4Hours(): List<PreparedAlert>
     fun getAllAlertsForNextDay(): List<PreparedAlert>
     fun deleteAlertById(id: Integer)
+    fun saveAlert(alert: PreparedAlert)
 }

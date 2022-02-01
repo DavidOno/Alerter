@@ -20,14 +20,14 @@ class PreparedAlertController {
         if (bindingResult.hasErrors()) {
             return ResponseEntity("JSON values do not satisfy constraints.\n$bindingResult", HttpStatus.BAD_REQUEST)
         }
-        preparedAlertRepository.save(preparedAlert)
+        preparedAlertRepository.saveAlert(preparedAlert)
         return ResponseEntity.ok("Created new Alert: ${preparedAlert.alertId}")
     }
 
     @DeleteMapping("/api/v1/delete_alert/")
     fun deleteAlert(@RequestParam id: Integer): ResponseEntity<String>{
        return if(alertIdExists(id)) {
-            preparedAlertRepository.deleteById(id)
+            preparedAlertRepository.deleteAlertById(id)
             ResponseEntity.ok("Deleted Alert with $id")
         } else {
             ResponseEntity.badRequest().body("Alert with id: $id not found")
