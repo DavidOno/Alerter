@@ -15,7 +15,7 @@ import javax.validation.constraints.NotEmpty
 @Document("PreparedAlert")
 data class PreparedAlert(
         @Id
-        val alertId: Integer,
+        val alertId: Int,
 
         @field:NotBlank(message = "There must be a message")
         @JsonProperty("message")
@@ -30,7 +30,7 @@ data class PreparedAlert(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
         val dateTimeForAlert: LocalDateTime
 ): Cacheable{
-        override fun getUniqueIdentifier(): Integer {
+        override fun getUniqueIdentifier(): Int {
                 return alertId
         }
 
@@ -39,6 +39,6 @@ data class PreparedAlert(
 }
 
 interface Cacheable {
-        fun getUniqueIdentifier(): Integer
+        fun getUniqueIdentifier(): Int
         fun getTimeStampForAlert(): Instant
 }

@@ -4,7 +4,7 @@ import de.boettcher.alerter.core.alert.crud.Cacheable
 
 
 class CacheHierarchy<T : Cacheable>(val levels: List<CacheByList<T>>) {
-    fun deleteById(id: Integer) {
+    fun deleteById(id: Int) {
         levels.forEach { cache -> cache.deleteFromCache(id) }
     }
 

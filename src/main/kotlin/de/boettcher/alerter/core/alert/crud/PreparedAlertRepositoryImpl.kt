@@ -44,7 +44,7 @@ class PreparedAlertRepositoryImpl: PreparedAlertRepositoryCustom {
         return allAlertsForNextDay
     }
 
-    override fun deleteAlertById(id: Integer) {
+    override fun deleteAlertById(id: Int) {
         preparedAlertRepository.deleteById(id)
         cacheHierarchy.deleteById(id)
     }

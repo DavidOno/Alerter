@@ -42,22 +42,6 @@ class SchedulingConfig: SchedulingConfigurer{
     }
 
 
-//    @Scheduled(fixedRateString = "PT1M")
-//    fun sendAlerts(){
-//        //Search through Redis Cache1
-//    }
-
-//    @Scheduled(fixedRateString = "PT1M") //Every 4 Hours
-//    fun checkForAlertsForNext5Hours(){
-//        //Search through Redis Cache2 OR simple evict the cache
-//    }
-//
-//    @Scheduled(fixedRateString = "PT1M") //Every 24 Hours
-//    fun checkForAlertsForNext25Hours(){
-//        //Search through MongoDB OR simple evict the cache
-//    }
-
-
 
     override fun configureTasks(taskRegistrar: ScheduledTaskRegistrar) {
         val taskScheduler = ThreadPoolTaskScheduler()

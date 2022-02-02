@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank
 data class Participant(
     @Id
     @JsonProperty("userId")
-    val userId: Integer,
+    val userId: Int,
 
     @field:NotBlank(message = "First name cannot be blank")
     @JsonProperty("firstName")

@@ -25,7 +25,7 @@ class PreparedAlertController {
     }
 
     @DeleteMapping("/api/v1/delete_alert/")
-    fun deleteAlert(@RequestParam id: Integer): ResponseEntity<String>{
+    fun deleteAlert(@RequestParam id: Int): ResponseEntity<String>{
        return if(alertIdExists(id)) {
             preparedAlertRepository.deleteAlertById(id)
             ResponseEntity.ok("Deleted Alert with $id")
@@ -34,7 +34,7 @@ class PreparedAlertController {
         }
     }
 
-    private fun alertIdExists(id: Integer): Boolean {
+    private fun alertIdExists(id: Int): Boolean {
         return preparedAlertRepository.findById(id).isPresent
     }
 }

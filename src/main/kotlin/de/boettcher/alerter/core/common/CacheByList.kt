@@ -31,7 +31,7 @@ class CacheByList<T : Cacheable>(val lifeTimeForCacheValidity: CacheLifeTime) {
         cachedData = newData
     }
 
-    fun deleteFromCache(id: Integer){
+    fun deleteFromCache(id: Int){
         cachedData = cachedData.filter { elem -> elem.getUniqueIdentifier() != id }
     }
 
